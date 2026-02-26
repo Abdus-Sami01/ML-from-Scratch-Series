@@ -1,5 +1,9 @@
-from math import log
+'''
+P(class∣features)=P(features)P(features∣class)⋅P(class)​
+y_hat​=cargmax​ P(class=c)⋅P(features∣class=c)
+'''
 
+from math import log
 
 e = 2.718281828459045
 
