@@ -219,6 +219,14 @@ def train_test_split(X, Y, test_ratio=0.2, seed=42):
         [Y[i] for i in test_idx],
     )
 
+def sample_with_replacement(n, size, rng):
+    return [rng.next_int(0, n - 1) for _ in range(size)]
+
+def random_subset(indices, size, rng):
+    copy = list(indices)
+    rng.shuffle(copy)
+    return copy[:size]
+
 def unique(lst):
     seen, out = set(), []
     for v in lst:
