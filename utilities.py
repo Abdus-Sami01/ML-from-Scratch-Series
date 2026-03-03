@@ -258,20 +258,21 @@ def zip_cols(matrix):
         yield [matrix[i][j] for i in range(len(matrix))]
 
 def cross_val_split(X, Y, n_folds=5, seed=42):
-    rng     = LCG(seed)
-    n       = len(X)
-    indices = rng.shuffle_indices(n)
+    rng       = LCG(seed)
+    n         = len(X)
+    indices   = rng.shuffle_indices(n)
     fold_size = n // n_folds
-    folds   = []
-
+    folds     = []
     for f in range(n_folds):
-        val_idx   = indices[ f*fold_size : (f+1)*fold_size ]
-        train_idx = indices[ :f*fold_size ] + indices[ (f+1)*fold_size: ]
-        # build X_train, Y_train, X_val, Y_val from indices
-        # append (X_train, Y_train, X_val, Y_val) to folds
-
+        val_idx   = indices[f*fold_size : (f+1)*fold_size]
+        train_idx = indices[:f*fold_size] + indices[(f+1)*fold_size:]
+        folds.append((
+            [X[i] for i in train_idx],
+            [Y[i] for i in train_idx],
+            [X[i] for i in val_idx],
+            [Y[i] for i in val_idx],
+        ))
     return folds
-
 
 def accuracy(y_true, y_pred):
     return sum(a == b for a, b in zip(y_true, y_pred)) / len(y_true)
