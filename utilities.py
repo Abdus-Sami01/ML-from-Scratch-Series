@@ -203,6 +203,8 @@ class LCG:
         return self.shuffle(list(range(n)))
 
 
+
+
 def train_test_split(X, Y, test_ratio=0.2, seed=42):
     rng     = LCG(seed)
     n       = len(X)
@@ -254,6 +256,21 @@ def flatten(matrix):
 def zip_cols(matrix):
     for j in range(len(matrix[0])):
         yield [matrix[i][j] for i in range(len(matrix))]
+
+def cross_val_split(X, Y, n_folds=5, seed=42):
+    rng     = LCG(seed)
+    n       = len(X)
+    indices = rng.shuffle_indices(n)
+    fold_size = n // n_folds
+    folds   = []
+
+    for f in range(n_folds):
+        val_idx   = indices[ f*fold_size : (f+1)*fold_size ]
+        train_idx = indices[ :f*fold_size ] + indices[ (f+1)*fold_size: ]
+        # build X_train, Y_train, X_val, Y_val from indices
+        # append (X_train, Y_train, X_val, Y_val) to folds
+
+    return folds
 
 
 def accuracy(y_true, y_pred):
