@@ -237,6 +237,33 @@ def unique(lst):
             out.append(v)
     return out
 
+def gen_blobs(n=300, n_clusters=3, spread=0.5, seed=1):
+    centers = [[0,3],[-3,-1.5],[3,-1.5],[-3,3],[3,3],
+               [0,-3],[0,0],[-1,2],[2,1],[-2,-2]][:n_clusters]
+    rng = LCG(seed)
+    X, Y = [], []
+    per = n // n_clusters
+    for c, ce in enumerate(centers):
+        for _ in range(per):
+            X.append([ce[0]+rng.next_gaussian()*spread,
+                      ce[1]+rng.next_gaussian()*spread])
+            Y.append(c)
+    return X, Y
+
+
+def gen_circles(n=300, n_rings=2, seed=3):
+    radii = [0.4, 1.0, 1.8, 2.6, 3.4][:n_rings]
+    rng = LCG(seed)
+    X, Y = [], []
+    per = n // n_rings
+    for c, r in enumerate(radii):
+        for _ in range(per):
+            angle = rng.next_float(0, 2 * PI)
+            noisy_r = r + rng.next_gaussian() * 0.05
+            X.append([noisy_r * cos(angle), noisy_r * sin(angle)])
+            Y.append(c)
+    return X, Y
+
 def count_values(lst):
     counts = {}
     for v in lst:
