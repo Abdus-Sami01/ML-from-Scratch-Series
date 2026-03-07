@@ -2,7 +2,7 @@ from utilities import (
     mean, std, unique, LCG,
     norm, vec_sub, absolute,
     gen_blobs, gen_circles,
-    PI, cos, sin, manhattan, eucleidian
+    PI, cos, sin, manhattan, euclidian
 )
 
 NOISE     = -1
