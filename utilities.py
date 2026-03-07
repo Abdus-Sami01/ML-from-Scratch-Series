@@ -264,6 +264,13 @@ def gen_circles(n=300, n_rings=2, seed=3):
             Y.append(c)
     return X, Y
 
+
+def euclidean(a, b):
+    return norm(vec_sub(a, b), p=2)
+
+def manhattan(a, b):
+    return norm(vec_sub(a, b), p=1)
+
 def count_values(lst):
     counts = {}
     for v in lst:
