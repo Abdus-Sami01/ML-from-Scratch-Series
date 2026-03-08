@@ -291,6 +291,10 @@ def zip_cols(matrix):
     for j in range(len(matrix[0])):
         yield [matrix[i][j] for i in range(len(matrix))]
 
+def mat_vec_mul(A, v):
+    return [sum(A[i][j] * v[j] for j in range(len(v)))
+            for i in range(len(A))]
+
 def cross_val_split(X, Y, n_folds=5, seed=42):
     rng       = LCG(seed)
     n         = len(X)
