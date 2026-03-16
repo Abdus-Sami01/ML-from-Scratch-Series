@@ -336,3 +336,126 @@ def mean_squared_error(y_true, y_pred):
 
 def mean_absolute_error(y_true, y_pred):
     return mean([absolute(a - b) for a, b in zip(y_true, y_pred)])
+
+def sigmoid(x):
+    x = max(-500.0, min(500.0, x))
+    return 1.0 / (1.0 + E ** (-x))
+
+def softmax(scores):
+    m = max(scores)
+    e = [E ** (s - m) for s in scores]
+    t = sum(e)
+    return [ei / t for ei in e]
+
+def gen_regression(n=300, seed=5):
+    rng = LCG(seed)
+    X, Y = [], []
+    for _ in range(n):
+        x1 = rng.next_float(-3, 3)
+        x2 = rng.next_float(-3, 3)
+        X.append([x1, x2])
+        y = sin(x1) + x2**2 * 0.3 + rng.next_gaussian() * 0.2
+        Y.append(float(y))
+    return X, Y
+
+def gen_xor(n=400, seed=2):
+    rng = LCG(seed)
+    X, Y = [], []
+    for _ in range(n):
+        x1 = rng.next_gaussian()
+        x2 = rng.next_gaussian()
+        Y.append(1 if (x1 > 0) != (x2 > 0) else 0)
+        X.append([x1, x2])
+    return X, Y
+
+def gen_moons(n=300, seed=3):
+    rng = LCG(seed)
+    X, Y = [], []
+    half = n // 2
+    for _ in range(half):
+        a = rng.next_float(0, PI)
+        X.append([cos(a) + rng.next_gaussian() * 0.1,
+                  sin(a) + rng.next_gaussian() * 0.1])
+        Y.append(0)
+    for _ in range(half):
+        a = rng.next_float(0, PI)
+        X.append([1 - cos(a) + rng.next_gaussian() * 0.1,
+                  0.5 - sin(a) + rng.next_gaussian() * 0.1])
+        Y.append(1)
+    return X, Y
+
+def gen_linearly_separable(n=200, seed=1):
+    rng = LCG(seed)
+    X, Y = [], []
+    for _ in range(n):
+        x1 = rng.next_gaussian()
+        x2 = rng.next_gaussian()
+        y  = 1 if x1 + x2 > 0 else 0
+        X.append([x1, x2])
+        Y.append(y)
+    return X, Y
+
+def make_image(H, W, C, rng):
+    img = []
+    for i in range(H):
+        row = []
+        for j in range(W):
+            pixel = [rng.next_float(0.0, 1.0) for _ in range(C)]
+            row.append(pixel)
+        img.append(row)
+    return img
+
+def gen_bright_vs_dark(n=120, img_size=8, seed=2):
+    rng = LCG(seed)
+    X, Y = [], []
+    for i in range(n):
+        img = make_image(img_size, img_size, 1, rng)
+        if i % 2 == 0:
+            for r in range(img_size):
+                for c in range(img_size):
+                    img[r][c][0] = rng.next_float(0.0, 0.4)
+            Y.append(0)
+        else:
+            for r in range(img_size):
+                for c in range(img_size):
+                    img[r][c][0] = rng.next_float(0.6, 1.0)
+            Y.append(1)
+        X.append(img)
+    return X, Y
+
+def gen_horizontal_vs_vertical(n=120, img_size=8, seed=1):
+    rng = LCG(seed)
+    X, Y = [], []
+    for i in range(n):
+        img = make_image(img_size, img_size, 1, rng)
+        if i % 2 == 0:
+            stripe = rng.next_int(1, img_size - 2)
+            for j in range(img_size):
+                img[stripe][j][0] = 1.0
+            Y.append(0)
+        else:
+            stripe = rng.next_int(1, img_size - 2)
+            for j in range(img_size):
+                img[j][stripe][0] = 1.0
+            Y.append(1)
+        X.append(img)
+    return X, Y
+
+def gen_quadrant(n=200, img_size=8, seed=3):
+    rng = LCG(seed)
+    X, Y = [], []
+    half = img_size // 2
+    for i in range(n):
+        img = make_image(img_size, img_size, 1, rng)
+        for r in range(img_size):
+            for c in range(img_size):
+                img[r][c][0] = 0.1
+        label   = i % 4
+        r_start = 0 if label in [0, 1] else half
+        c_start = 0 if label in [0, 2] else half
+        for r in range(r_start, r_start + half):
+            for c in range(c_start, c_start + half):
+                img[r][c][0] = 0.9
+        X.append(img)
+        Y.append(label)
+    return X, Y
